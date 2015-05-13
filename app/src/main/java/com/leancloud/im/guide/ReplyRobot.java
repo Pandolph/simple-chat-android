@@ -1,7 +1,6 @@
 package com.leancloud.im.guide;
 
 import android.util.Log;
-
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
@@ -13,8 +12,6 @@ public class ReplyRobot {
   public static final String ROBOT_NAME = "robot";
   private static final String TAG = ReplyRobot.class.getSimpleName();
   private AVIMClient avimClient;
-
-
 
   public ReplyRobot() {
     avimClient = AVIMClient.getInstance(ROBOT_NAME);
