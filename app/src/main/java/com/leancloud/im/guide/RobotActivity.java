@@ -55,7 +55,7 @@ public class RobotActivity extends ActionBarActivity {
     sendButton = findViewById(R.id.send);
     messageEditText = (EditText) findViewById(R.id.message);
 
-    adapter = new MessageAdapter(RobotActivity.this);
+    adapter = new MessageAdapter(RobotActivity.this,Application.getClientIdFromPre());
     listView.setAdapter(adapter);
 
     // get argument
@@ -139,13 +139,6 @@ public class RobotActivity extends ActionBarActivity {
     AVIMMessageManager.unregisterMessageHandler(AVIMTextMessage.class, handler);
   }
 
-
-
-  public static void startActivity(Context context, String clientId) {
-    Intent intent = new Intent(context, RobotActivity.class);
-    intent.putExtra(EXTRA_CLIENT_ID, clientId);
-    context.startActivity(intent);
-  }
 
   public class RobotHandler extends AVIMTypedMessageHandler<AVIMTextMessage> {
     MessageAdapter adapter;

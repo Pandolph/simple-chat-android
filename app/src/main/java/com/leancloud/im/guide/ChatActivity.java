@@ -26,10 +26,8 @@ import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
  */
 public class ChatActivity extends ActionBarActivity {
   private static final String EXTRA_CONVERSATION_ID = "conversation_id";
-  private static final String EXTRA_CLIENT_ID = "client_id";
   private static final String TAG = ChatActivity.class.getSimpleName();
 
-  AVIMClient avimClient;
   private AVIMConversation conversation;
   MessageAdapter adapter;
 
@@ -47,44 +45,20 @@ public class ChatActivity extends ActionBarActivity {
     listView = (ListView) findViewById(R.id.listview);
     sendButton = findViewById(R.id.send);
     messageEditText = (EditText) findViewById(R.id.message);
-    adapter = new MessageAdapter(ChatActivity.this);
+    adapter = new MessageAdapter(ChatActivity.this,Application.getClientIdFromPre());
     listView.setAdapter(adapter);
 
     // get argument
-    String clientId = getIntent().getStringExtra(EXTRA_CLIENT_ID);
-    if (TextUtils.isEmpty(clientId)) {
-      clientId = "me";
-    }
     final String conversationId = getIntent().getStringExtra(EXTRA_CONVERSATION_ID);
     Log.d(TAG, "会话 id: " + conversationId);
 
 
     // register callback
-    AVIMMessageManager.registerDefaultMessageHandler(new CustomMessageHandler());
     handler = new ChatHandler(adapter);
     AVIMMessageManager.registerMessageHandler(AVIMTextMessage.class, handler);
 
-    // open im client
-    avimClient = AVIMClient.getInstance(clientId);
-    avimClient.open(new AVIMClientCallback() {
-      @Override
-      public void done(AVIMClient avimClient, AVException exception) {
-        if (exception == null) {
-          Toast.makeText(ChatActivity.this, "client open!", Toast.LENGTH_LONG).show();
-          conversation = avimClient.getConversation(conversationId);
-          conversation.join(new AVIMConversationCallback() {
-            @Override
-            public void done(AVException exception) {
-              if (exception == null) {
-                Log.d(TAG, "加入会话成功");
-              }
-            }
-          });
-        } else {
-          Toast.makeText(ChatActivity.this, exception.getMessage(), Toast.LENGTH_LONG).show();
-        }
-      }
-    });
+
+    conversation=Application.getIMClient().getConversation(conversationId);
 
     sendButton.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -100,6 +74,7 @@ public class ChatActivity extends ActionBarActivity {
             if (null != exception) {
               exception.printStackTrace();
             } else {
+              messageEditText.setText(null);
               Log.d(TAG, "发送成功，msgId=" + message.getMessageId());
             }
           }
@@ -116,26 +91,17 @@ public class ChatActivity extends ActionBarActivity {
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    avimClient.close(new AVIMClientCallback() {
-      @Override
-      public void done(AVIMClient avimClient, AVException exception) {
-        if (exception == null) {
-          Log.d(TAG, "退出连接");
-        }
-      }
-    });
     AVIMMessageManager.unregisterMessageHandler(AVIMTextMessage.class, handler);
   }
 
-  public static void startActivity(Context context, String clientId, String conversationId) {
+  public static void startActivity(Context context, String conversationId) {
     Intent intent = new Intent(context, ChatActivity.class);
-    intent.putExtra(EXTRA_CLIENT_ID, clientId);
     intent.putExtra(EXTRA_CONVERSATION_ID, conversationId);
     context.startActivity(intent);
   }
 
   public class ChatHandler extends AVIMTypedMessageHandler<AVIMTextMessage> {
-    MessageAdapter adapter;
+    private MessageAdapter adapter;
 
     public ChatHandler(MessageAdapter adapter) {
       this.adapter = adapter;
