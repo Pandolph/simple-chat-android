@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
+import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 
 import java.util.LinkedList;
@@ -17,12 +19,16 @@ import java.util.List;
  */
 public class MessageAdapter extends BaseAdapter {
   private Context context;
-  List<AVIMTextMessage> messageList = new LinkedList<>();
+  List<AVIMTypedMessage> messageList = new LinkedList<>();
   private String selfId;
 
   public MessageAdapter(Context context, String selfId) {
     this.context = context;
     this.selfId = selfId;
+  }
+
+  public void setMessageList(List<AVIMTypedMessage> messageList) {
+    this.messageList = messageList;
   }
 
   @Override
@@ -52,8 +58,15 @@ public class MessageAdapter extends BaseAdapter {
     } else {
       holder = (ViewHolder) convertView.getTag();
     }
-    AVIMTextMessage message = messageList.get(position);
-    holder.message.setText(message.getText());
+    AVIMTypedMessage message = messageList.get(position);
+    String text;
+    if (AVIMReservedMessageType.getAVIMReservedMessageType(message.getMessageType()) == AVIMReservedMessageType.TextMessageType) {
+      AVIMTextMessage textMessage = (AVIMTextMessage) message;
+      text = textMessage.getText();
+    } else {
+      text = message.getContent();
+    }
+    holder.message.setText(text);
     holder.sender.setText(message.getFrom());
     if (message.getFrom().equals(selfId)) {
       holder.message.setTextColor(Color.BLACK);

@@ -117,12 +117,8 @@ public class RobotActivity extends ActionBarActivity {
           }
         });
         adapter.addMessage(message);
-        InputMethodManager imm =
-            (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(messageEditText.getWindowToken(), 0);
       }
     });
-
   }
 
   @Override
