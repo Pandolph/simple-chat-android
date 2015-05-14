@@ -64,15 +64,6 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/create_conversation"
-            style="@style/SmallFont"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/create_conversation"/>
-
-        <TextView
             android:id="@+id/join_conversation"
             style="@style/SmallFont"
             android:layout_width="match_parent"

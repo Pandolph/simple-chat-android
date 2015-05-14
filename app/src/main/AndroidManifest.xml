@@ -27,8 +27,6 @@
         </activity>
         <activity android:name=".ChatActivity" >
         </activity>
-        <activity android:name=".RobotActivity" >
-        </activity>
 
         <service android:name="com.avos.avoscloud.PushService" />
 

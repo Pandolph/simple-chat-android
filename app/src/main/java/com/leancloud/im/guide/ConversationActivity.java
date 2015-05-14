@@ -44,7 +44,6 @@ public class ConversationActivity extends ActionBarActivity implements View.OnCl
 
     clientIdTextView.setText(getString(R.string.welcome) + Application.getClientIdFromPre());
 
-    findViewById(R.id.create_conversation).setOnClickListener(this);
     findViewById(R.id.join_conversation).setOnClickListener(this);
 
     findViewById(R.id.logout).setOnClickListener(this);
@@ -54,12 +53,6 @@ public class ConversationActivity extends ActionBarActivity implements View.OnCl
   @Override
   public void onClick(View v) {
     switch (v.getId()) {
-      case R.id.create_conversation:
-        // ChatActivity.startActivity(ConversationActivity.this, ConversationActivity.this.clientId,
-        // "551a2847e4b04d688d73dc54");
-        Intent intent = new Intent(this, RobotActivity.class);
-        startActivity(intent);
-        break;
       case R.id.logout:
         Application.setClientIdToPre("");
         finish();
